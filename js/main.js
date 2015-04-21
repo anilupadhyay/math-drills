@@ -6,6 +6,30 @@ $(document).ready(function() {
     var currentScore = null;
 	var gameActive = false;
 
+    var correctSound = document.createElement("audio");
+    correctSound.src="sounds/VideoRecord.ogg";
+    correctSound.volume=1;
+    correctSound.autoPlay=false;
+    correctSound.preLoad=true;       
+
+    var incorrectSound = document.createElement("audio");
+    incorrectSound.src="sounds/VideoStop.ogg";
+    incorrectSound.volume=1;
+    incorrectSound.autoPlay=false;
+    incorrectSound.preLoad=true;
+
+    var highScoreSound = document.createElement("audio");
+    highScoreSound.src="sounds/dimension.ogg";
+    highScoreSound.volume=1;
+    highScoreSound.autoPlay=false;
+    highScoreSound.preLoad=true;
+
+    var gameOverSound = document.createElement("audio");
+    gameOverSound.src="sounds/Positive.mp3";
+    gameOverSound.volume=1;
+    gameOverSound.autoPlay=false;
+    gameOverSound.preLoad=true;
+
     document.getElementById("answer").disabled = true;
 
 	function timer() {
@@ -19,8 +43,6 @@ $(document).ready(function() {
     }
 
     function startGame() {
-
-		console.log('in start');
 
         gameActive = true;
         currentScore = 0;
@@ -62,11 +84,17 @@ $(document).ready(function() {
 
         if (gameActive) {
 
-            if (parseInt(document.getElementById("answer").value) ==
-                f(operand1, operand2)) {
+            if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
+
+		        correctSound.play();
                 currentScore++;
                 updateScore(currentScore);
-            }
+
+            } else {
+
+		        incorrectSound.play();
+
+			}
 
             document.getElementById("answer").value = "";
 
@@ -78,17 +106,25 @@ $(document).ready(function() {
     }
 
     function endGame() {
+
         document.getElementById("countdown").innerHTML = 0;
         clearInterval(counter);
         gameActive = false;
         document.getElementById("answer").disabled = true;
-        document.getElementById("equation").innerHTML = "&nbsp;";
+        document.getElementById("equation").innerHTML = "Complete!";
 
         if (currentScore > highScore) {
+			highScoreSound.play();
             highScore = currentScore;
             document.getElementById("highScore").innerHTML =
                 highScore;
-        }
+        } else {
+			gameOverSound.play();
+
+		}
+
+        document.getElementById("answer").value = "";
+
     }
 
     document.body.onkeyup = function(e) {
