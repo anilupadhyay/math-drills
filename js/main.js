@@ -6,30 +6,6 @@ $(document).ready(function() {
     var currentScore = null;
 	var gameActive = false;
 
-    var correctSound = document.createElement("audio");
-    correctSound.src="sounds/VideoRecord.ogg";
-    correctSound.volume=1;
-    correctSound.autoPlay=false;
-    correctSound.preLoad=true;       
-
-    var incorrectSound = document.createElement("audio");
-    incorrectSound.src="sounds/VideoStop.ogg";
-    incorrectSound.volume=1;
-    incorrectSound.autoPlay=false;
-    incorrectSound.preLoad=true;
-
-    var highScoreSound = document.createElement("audio");
-    highScoreSound.src="sounds/dimension.ogg";
-    highScoreSound.volume=1;
-    highScoreSound.autoPlay=false;
-    highScoreSound.preLoad=true;
-
-    var gameOverSound = document.createElement("audio");
-    gameOverSound.src="sounds/Positive.mp3";
-    gameOverSound.volume=1;
-    gameOverSound.autoPlay=false;
-    gameOverSound.preLoad=true;
-
     document.getElementById("answer").disabled = true;
 
 	function timer() {
@@ -69,12 +45,21 @@ $(document).ready(function() {
 
     function createQuestion() {
 
-        maximumOperand = 5;
+		do {
 
-        operand1 = Math.round(Math.random() * maximumOperand);
-        operand2 = Math.round(Math.random() * maximumOperand);
-        document.getElementById("equation").innerHTML = operand1 +
-            "+" + operand2;
+	        maximumOperand = 10;
+
+			existing = document.getElementById("equation").innerHTML;
+
+	        operand1 = Math.round(Math.random() * maximumOperand);
+	        operand2 = Math.round(Math.random() * maximumOperand);
+
+	        document.getElementById("equation").innerHTML = operand1 +
+		            "+" + operand2;
+
+			next = document.getElementById("equation").innerHTML;
+
+		} while (existing == next);
 
     }
 
@@ -84,22 +69,46 @@ $(document).ready(function() {
 
         if (gameActive) {
 
-            if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
+console.log(f(operand1, operand2).toString().length);
+console.log(document.getElementById("answer").value.toString().length);
 
-		        correctSound.play();
-                currentScore++;
-                updateScore(currentScore);
+			var readyToEvaluate = f(operand1, operand2).toString().length == document.getElementById("answer").value.toString().length;
 
-            } else {
+			console.log(readyToEvaluate);
 
-		        incorrectSound.play();
+            if (readyToEvaluate) {
 
-			}
+				if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
 
-            document.getElementById("answer").value = "";
+				    var correctSound = document.createElement("audio");
+				    correctSound.src="sounds/VideoRecord.ogg";
+				    correctSound.volume=1;
+				    correctSound.autoPlay=false;
+				    correctSound.preLoad=true;       
 
-            createQuestion();
-            document.getElementById("answer").focus();
+			        correctSound.play();
+
+	                currentScore++;
+	                updateScore(currentScore);
+
+	            } else {
+
+				    var incorrectSound = document.createElement("audio");
+				    incorrectSound.src="sounds/VideoStop.ogg";
+				    incorrectSound.volume=1;
+				    incorrectSound.autoPlay=false;
+				    incorrectSound.preLoad=true;
+
+			        incorrectSound.play();
+
+				}	
+
+	            document.getElementById("answer").value = "";
+
+	            createQuestion();
+	            document.getElementById("answer").focus();
+	
+			} 
 
         }
 
@@ -107,23 +116,44 @@ $(document).ready(function() {
 
     function endGame() {
 
-        document.getElementById("countdown").innerHTML = 0;
-        clearInterval(counter);
-        gameActive = false;
-        document.getElementById("answer").disabled = true;
-        document.getElementById("equation").innerHTML = "Complete!";
+		if (gameActive) {
 
-        if (currentScore > highScore) {
-			highScoreSound.play();
-            highScore = currentScore;
-            document.getElementById("highScore").innerHTML =
-                highScore;
-        } else {
-			gameOverSound.play();
+	        document.getElementById("countdown").innerHTML = 0;
+	        clearInterval(counter);
+	        gameActive = false;
+	        document.getElementById("answer").disabled = true;
+	        document.getElementById("equation").innerHTML = "Complete!";
+
+	        if (currentScore > highScore) {
+	
+			    var highScoreSound = document.createElement("audio");
+			    highScoreSound.src="sounds/dimension.ogg";
+			    highScoreSound.volume=1;
+			    highScoreSound.autoPlay=false;
+			    highScoreSound.preLoad=true;
+
+				highScoreSound.play();
+
+	            highScore = currentScore;
+	            document.getElementById("highScore").innerHTML =
+	                highScore;
+	
+	        } else {
+
+			    var gameOverSound = document.createElement("audio");
+			    gameOverSound.src="sounds/Positive.mp3";
+			    gameOverSound.volume=1;
+			    gameOverSound.autoPlay=false;
+			    gameOverSound.preLoad=true;
+
+				gameOverSound.play();
+
+			}
+
+	        document.getElementById("answer").value = "";
 
 		}
 
-        document.getElementById("answer").value = "";
 
     }
 
