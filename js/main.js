@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 		do {
 
-	        maximumOperand = 5;
+	        maximumOperand = 10;
 
 			existing = document.getElementById("equation").innerHTML;
 
@@ -59,7 +59,7 @@ $(document).ready(function() {
 
 			next = document.getElementById("equation").innerHTML;
 
-		} while (existing != next);
+		} while (existing == next);
 
     }
 
@@ -69,35 +69,46 @@ $(document).ready(function() {
 
         if (gameActive) {
 
-            if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
+console.log(f(operand1, operand2).toString().length);
+console.log(document.getElementById("answer").value.toString().length);
 
-			    var correctSound = document.createElement("audio");
-			    correctSound.src="sounds/VideoRecord.ogg";
-			    correctSound.volume=1;
-			    correctSound.autoPlay=false;
-			    correctSound.preLoad=true;       
+			var readyToEvaluate = f(operand1, operand2).toString().length == document.getElementById("answer").value.toString().length;
 
-		        correctSound.play();
-		
-                currentScore++;
-                updateScore(currentScore);
+			console.log(readyToEvaluate);
 
-            } else {
+            if (readyToEvaluate) {
 
-			    var incorrectSound = document.createElement("audio");
-			    incorrectSound.src="sounds/VideoStop.ogg";
-			    incorrectSound.volume=1;
-			    incorrectSound.autoPlay=false;
-			    incorrectSound.preLoad=true;
+				if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
 
-		        incorrectSound.play();
+				    var correctSound = document.createElement("audio");
+				    correctSound.src="sounds/VideoRecord.ogg";
+				    correctSound.volume=1;
+				    correctSound.autoPlay=false;
+				    correctSound.preLoad=true;       
 
-			}
+			        correctSound.play();
 
-            document.getElementById("answer").value = "";
+	                currentScore++;
+	                updateScore(currentScore);
 
-            createQuestion();
-            document.getElementById("answer").focus();
+	            } else {
+
+				    var incorrectSound = document.createElement("audio");
+				    incorrectSound.src="sounds/VideoStop.ogg";
+				    incorrectSound.volume=1;
+				    incorrectSound.autoPlay=false;
+				    incorrectSound.preLoad=true;
+
+			        incorrectSound.play();
+
+				}	
+
+	            document.getElementById("answer").value = "";
+
+	            createQuestion();
+	            document.getElementById("answer").focus();
+	
+			} 
 
         }
 
