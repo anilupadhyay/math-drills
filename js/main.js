@@ -8,6 +8,11 @@ $(document).ready(function() {
 
     document.getElementById("answer").disabled = true;
 
+    function getParameterByName(name) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
 	function timer() {
         count = count - 1;
         if (count < 0) {
@@ -27,7 +32,13 @@ $(document).ready(function() {
         createQuestion();
 
         clearInterval(counter);
+
         count = 30;
+
+        if (getParameterByName('time') != null) {
+          count = getParameterByName('time');
+
+        }
 
         document.getElementById("answer").disabled = false;
         document.getElementById("answer").value = "";
@@ -43,19 +54,41 @@ $(document).ready(function() {
             newScore;
     }
 
+    var operator = "+";
+    var f = new Function('x', 'y', 'return x'+ operator +'y');
+
     function createQuestion() {
 
 		do {
 
-	        maximumOperand = 10;
+//	        maximumOperand = 5;
+          maximumOperand = 10;
+
+      if (getParameterByName('operand') != null) {
+        maximumOperand = getParameterByName('operand');
+      }
 
 			existing = document.getElementById("equation").innerHTML;
 
-	        operand1 = Math.round(Math.random() * maximumOperand);
+	        // operand1 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
+	        // operand2 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
+          operand1 = Math.round(Math.random() * maximumOperand);
 	        operand2 = Math.round(Math.random() * maximumOperand);
 
+
+if (getParameterByName('operator') != null) {
+  operator = getParameterByName('operator');
+  f = new Function('x', 'y', 'return x'+ operator +'y');
+}
+
+if (operator === '-' && operand1 < operand2) {
+  var placeholder = operand1;
+  operand1 = operand2;
+  operand2 = placeholder;
+}
+
 	        document.getElementById("equation").innerHTML = operand1 +
-		            "+" + operand2;
+		            operator + operand2;
 
 			next = document.getElementById("equation").innerHTML;
 
@@ -63,18 +96,11 @@ $(document).ready(function() {
 
     }
 
-    var f = new Function('x', 'y', 'return x+y');
-
     function evaluateAnswer() {
 
         if (gameActive) {
 
-console.log(f(operand1, operand2).toString().length);
-console.log(document.getElementById("answer").value.toString().length);
-
 			var readyToEvaluate = f(operand1, operand2).toString().length == document.getElementById("answer").value.toString().length;
-
-			console.log(readyToEvaluate);
 
             if (readyToEvaluate) {
 
@@ -84,7 +110,7 @@ console.log(document.getElementById("answer").value.toString().length);
 				    correctSound.src="sounds/VideoRecord.ogg";
 				    correctSound.volume=1;
 				    correctSound.autoPlay=false;
-				    correctSound.preLoad=true;       
+				    correctSound.preLoad=true;
 
 			        correctSound.play();
 
@@ -101,14 +127,14 @@ console.log(document.getElementById("answer").value.toString().length);
 
 			        incorrectSound.play();
 
-				}	
+				}
 
 	            document.getElementById("answer").value = "";
 
 	            createQuestion();
 	            document.getElementById("answer").focus();
-	
-			} 
+
+			}
 
         }
 
@@ -125,7 +151,7 @@ console.log(document.getElementById("answer").value.toString().length);
 	        document.getElementById("equation").innerHTML = "Complete!";
 
 	        if (currentScore > highScore) {
-	
+
 			    var highScoreSound = document.createElement("audio");
 			    highScoreSound.src="sounds/dimension.ogg";
 			    highScoreSound.volume=1;
@@ -137,7 +163,7 @@ console.log(document.getElementById("answer").value.toString().length);
 	            highScore = currentScore;
 	            document.getElementById("highScore").innerHTML =
 	                highScore;
-	
+
 	        } else {
 
 			    var gameOverSound = document.createElement("audio");
