@@ -25,6 +25,8 @@ $(document).ready(function() {
 
     function startGame() {
 
+        $("#results").hide();
+        $("#results").html("");
         gameActive = true;
         currentScore = 0;
         updateScore(currentScore);
@@ -56,6 +58,7 @@ $(document).ready(function() {
 
     var operator = "+";
     var f = new Function('x', 'y', 'return x' + operator + 'y');
+    var questionStartTime = null;
 
     function createQuestion() {
 
@@ -94,8 +97,9 @@ $(document).ready(function() {
                     operator + operand2;
             }
 
-
             next = document.getElementById("equation").innerHTML;
+
+            questionStartTime = new Date().getTime();
 
         } while (existing == next);
 
@@ -122,6 +126,14 @@ $(document).ready(function() {
                     currentScore++;
                     updateScore(currentScore);
 
+                    var resultLog = "<div><span class='infoHeader'>";
+                    resultLog += document.getElementById("equation").innerHTML;
+                    resultLog += "</span><span class='infoHeader'>Correct</span><span class='infoHeader'>";
+                    resultLog += (new Date().getTime() - questionStartTime) / 1000;
+                    resultLog += "</span></div>";
+
+                    $("#results").append(resultLog);
+
                 } else {
 
                     var incorrectSound = document.createElement("audio");
@@ -131,6 +143,14 @@ $(document).ready(function() {
                     incorrectSound.preLoad = true;
 
                     incorrectSound.play();
+
+                    var resultLog = "<div><span class='infoHeader'>";
+                    resultLog += document.getElementById("equation").innerHTML;
+                    resultLog += "</span><span class='infoHeader'>Incorrect</span><span class='infoHeader'>";
+                    resultLog += (new Date().getTime() - questionStartTime) / 1000;
+                    resultLog += "</span></div>";
+
+                    $("#results").append(resultLog);
 
                 }
 
@@ -154,6 +174,8 @@ $(document).ready(function() {
             gameActive = false;
             document.getElementById("answer").disabled = true;
             document.getElementById("equation").innerHTML = "Complete!";
+
+            $("#results").show();
 
             if (currentScore > highScore) {
 
@@ -184,7 +206,6 @@ $(document).ready(function() {
             document.getElementById("answer").value = "";
 
         }
-
 
     }
 

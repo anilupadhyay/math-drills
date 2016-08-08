@@ -21,7 +21,15 @@ body {
 .infoHeader {
     display: inline-block;
     margin: 3%;
-
+}
+.invisible {
+    visibility: hidden;
+    position: absolute;
+    top: -9999px;
+}
+.visible {
+    visibility: visible;
+    position: static;
 }
 #equationContainer {
     text-align: center;
