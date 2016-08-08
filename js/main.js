@@ -87,8 +87,13 @@ if (operator === '-' && operand1 < operand2) {
   operand2 = placeholder;
 }
 
-	        document.getElementById("equation").innerHTML = operand1 +
-		            operator + operand2;
+if (getParameterByName('number') != null) {
+  document.getElementById("equation").innerHTML = f(operand1, operand2).toString();
+} else {
+  document.getElementById("equation").innerHTML = operand1 +
+        operator + operand2;
+}
+
 
 			next = document.getElementById("equation").innerHTML;
 
