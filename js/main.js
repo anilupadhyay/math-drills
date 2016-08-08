@@ -2,9 +2,9 @@ $(document).ready(function() {
 
     var count = null;
     var counter = null;
-	var highScore = 0;
+    var highScore = 0;
     var currentScore = null;
-	var gameActive = false;
+    var gameActive = false;
 
     document.getElementById("answer").disabled = true;
 
@@ -13,7 +13,7 @@ $(document).ready(function() {
         return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
     }
 
-	function timer() {
+    function timer() {
         count = count - 1;
         if (count < 0) {
             endGame();
@@ -36,7 +36,7 @@ $(document).ready(function() {
         count = 30;
 
         if (getParameterByName('time') != null) {
-          count = getParameterByName('time');
+            count = getParameterByName('time');
 
         }
 
@@ -55,49 +55,49 @@ $(document).ready(function() {
     }
 
     var operator = "+";
-    var f = new Function('x', 'y', 'return x'+ operator +'y');
+    var f = new Function('x', 'y', 'return x' + operator + 'y');
 
     function createQuestion() {
 
-		do {
+        do {
 
-//	        maximumOperand = 5;
-          maximumOperand = 10;
+            //	        maximumOperand = 5;
+            maximumOperand = 10;
 
-      if (getParameterByName('operand') != null) {
-        maximumOperand = getParameterByName('operand');
-      }
+            if (getParameterByName('operand') != null) {
+                maximumOperand = getParameterByName('operand');
+            }
 
-			existing = document.getElementById("equation").innerHTML;
+            existing = document.getElementById("equation").innerHTML;
 
-	        // operand1 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
-	        // operand2 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
-          operand1 = Math.round(Math.random() * maximumOperand);
-	        operand2 = Math.round(Math.random() * maximumOperand);
-
-
-if (getParameterByName('operator') != null) {
-  operator = getParameterByName('operator');
-  f = new Function('x', 'y', 'return x'+ operator +'y');
-}
-
-if (operator === '-' && operand1 < operand2) {
-  var placeholder = operand1;
-  operand1 = operand2;
-  operand2 = placeholder;
-}
-
-if (getParameterByName('number') != null) {
-  document.getElementById("equation").innerHTML = f(operand1, operand2).toString();
-} else {
-  document.getElementById("equation").innerHTML = operand1 +
-        operator + operand2;
-}
+            // operand1 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
+            // operand2 = Math.round(Math.random() * maximumOperand) * Math.pow(10, Math.round(Math.random()));
+            operand1 = Math.round(Math.random() * maximumOperand);
+            operand2 = Math.round(Math.random() * maximumOperand);
 
 
-			next = document.getElementById("equation").innerHTML;
+            if (getParameterByName('operator') != null) {
+                operator = getParameterByName('operator');
+                f = new Function('x', 'y', 'return x' + operator + 'y');
+            }
 
-		} while (existing == next);
+            if (operator === '-' && operand1 < operand2) {
+                var placeholder = operand1;
+                operand1 = operand2;
+                operand2 = placeholder;
+            }
+
+            if (getParameterByName('number') != null) {
+                document.getElementById("equation").innerHTML = f(operand1, operand2).toString();
+            } else {
+                document.getElementById("equation").innerHTML = operand1 +
+                    operator + operand2;
+            }
+
+
+            next = document.getElementById("equation").innerHTML;
+
+        } while (existing == next);
 
     }
 
@@ -105,41 +105,41 @@ if (getParameterByName('number') != null) {
 
         if (gameActive) {
 
-			var readyToEvaluate = f(operand1, operand2).toString().length == document.getElementById("answer").value.toString().length;
+            var readyToEvaluate = f(operand1, operand2).toString().length == document.getElementById("answer").value.toString().length;
 
             if (readyToEvaluate) {
 
-				if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
+                if (parseInt(document.getElementById("answer").value) == f(operand1, operand2)) {
 
-				    var correctSound = document.createElement("audio");
-				    correctSound.src="sounds/VideoRecord.ogg";
-				    correctSound.volume=1;
-				    correctSound.autoPlay=false;
-				    correctSound.preLoad=true;
+                    var correctSound = document.createElement("audio");
+                    correctSound.src = "sounds/VideoRecord.ogg";
+                    correctSound.volume = 1;
+                    correctSound.autoPlay = false;
+                    correctSound.preLoad = true;
 
-			        correctSound.play();
+                    correctSound.play();
 
-	                currentScore++;
-	                updateScore(currentScore);
+                    currentScore++;
+                    updateScore(currentScore);
 
-	            } else {
+                } else {
 
-				    var incorrectSound = document.createElement("audio");
-				    incorrectSound.src="sounds/VideoStop.ogg";
-				    incorrectSound.volume=1;
-				    incorrectSound.autoPlay=false;
-				    incorrectSound.preLoad=true;
+                    var incorrectSound = document.createElement("audio");
+                    incorrectSound.src = "sounds/VideoStop.ogg";
+                    incorrectSound.volume = 1;
+                    incorrectSound.autoPlay = false;
+                    incorrectSound.preLoad = true;
 
-			        incorrectSound.play();
+                    incorrectSound.play();
 
-				}
+                }
 
-	            document.getElementById("answer").value = "";
+                document.getElementById("answer").value = "";
 
-	            createQuestion();
-	            document.getElementById("answer").focus();
+                createQuestion();
+                document.getElementById("answer").focus();
 
-			}
+            }
 
         }
 
@@ -147,43 +147,43 @@ if (getParameterByName('number') != null) {
 
     function endGame() {
 
-		if (gameActive) {
+        if (gameActive) {
 
-	        document.getElementById("countdown").innerHTML = 0;
-	        clearInterval(counter);
-	        gameActive = false;
-	        document.getElementById("answer").disabled = true;
-	        document.getElementById("equation").innerHTML = "Complete!";
+            document.getElementById("countdown").innerHTML = 0;
+            clearInterval(counter);
+            gameActive = false;
+            document.getElementById("answer").disabled = true;
+            document.getElementById("equation").innerHTML = "Complete!";
 
-	        if (currentScore > highScore) {
+            if (currentScore > highScore) {
 
-			    var highScoreSound = document.createElement("audio");
-			    highScoreSound.src="sounds/dimension.ogg";
-			    highScoreSound.volume=1;
-			    highScoreSound.autoPlay=false;
-			    highScoreSound.preLoad=true;
+                var highScoreSound = document.createElement("audio");
+                highScoreSound.src = "sounds/dimension.ogg";
+                highScoreSound.volume = 1;
+                highScoreSound.autoPlay = false;
+                highScoreSound.preLoad = true;
 
-				highScoreSound.play();
+                highScoreSound.play();
 
-	            highScore = currentScore;
-	            document.getElementById("highScore").innerHTML =
-	                highScore;
+                highScore = currentScore;
+                document.getElementById("highScore").innerHTML =
+                    highScore;
 
-	        } else {
+            } else {
 
-			    var gameOverSound = document.createElement("audio");
-			    gameOverSound.src="sounds/Positive.mp3";
-			    gameOverSound.volume=1;
-			    gameOverSound.autoPlay=false;
-			    gameOverSound.preLoad=true;
+                var gameOverSound = document.createElement("audio");
+                gameOverSound.src = "sounds/Positive.mp3";
+                gameOverSound.volume = 1;
+                gameOverSound.autoPlay = false;
+                gameOverSound.preLoad = true;
 
-				gameOverSound.play();
+                gameOverSound.play();
 
-			}
+            }
 
-	        document.getElementById("answer").value = "";
+            document.getElementById("answer").value = "";
 
-		}
+        }
 
 
     }
@@ -197,17 +197,17 @@ if (getParameterByName('number') != null) {
         }
     };
 
-	$("#answer").bind("keyup", function() {
-		evaluateAnswer();
-	});
+    $("#answer").bind("keyup", function() {
+        evaluateAnswer();
+    });
 
-	//DOM EVENTS
-	$('#newGameBtn').on('click', function(){
-		startGame();
-	});
+    //DOM EVENTS
+    $('#newGameBtn').on('click', function() {
+        startGame();
+    });
 
-	$('#endGameBtn').on('click', function(){
-		endGame();
-	});
+    $('#endGameBtn').on('click', function() {
+        endGame();
+    });
 
 });
